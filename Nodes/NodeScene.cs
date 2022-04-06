@@ -73,21 +73,20 @@ namespace Nodes
             }
             if (input.IsKeyDown(Keys.W) || input.IsKeyDown(Keys.Up) || input.IsKeyDown(Keys.I))
             {
-                camera.position.Y += 0.1f;
+                camera.position.Y += camera.yScale * (gameTime.ElapsedGameTime.Ticks / (float)TimeSpan.TicksPerSecond);
             }
             if (input.IsKeyDown(Keys.S) || input.IsKeyDown(Keys.Down) || input.IsKeyDown(Keys.K))
             {
-                camera.position.Y -= 0.1f;
+                camera.position.Y -= camera.yScale * (gameTime.ElapsedGameTime.Ticks / (float)TimeSpan.TicksPerSecond);
             }
             if (input.IsKeyDown(Keys.D) || input.IsKeyDown(Keys.Right) || input.IsKeyDown(Keys.L))
             {
-                camera.position.X += 0.1f;
+                camera.position.X += camera.yScale * (gameTime.ElapsedGameTime.Ticks / (float)TimeSpan.TicksPerSecond);
             }
             if (input.IsKeyDown(Keys.A) || input.IsKeyDown(Keys.Left) || input.IsKeyDown(Keys.J))
             {
-                camera.position.X -= 0.1f;
+                camera.position.X -= camera.yScale * (gameTime.ElapsedGameTime.Ticks / (float)TimeSpan.TicksPerSecond);
             }
-
             
             if (input.LeftMouseDown)
             {
@@ -97,7 +96,7 @@ namespace Nodes
             {
                 nodeManager.AddNode(new CoolNode(nodeManager, camera.PixelToUnit(input.MousePosition)));
             }
-            camera.yScale -= input.ScrollWheelDelta / 100f;
+            camera.yScale -= input.ScrollWheelDelta * 0.01f;
             if (camera.yScale < 0.01f)
             {
                 camera.yScale = 0.01f;
@@ -121,7 +120,7 @@ namespace Nodes
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.MidnightBlue * 0.5f);
-            spriteBatch.Begin(SpriteSortMode.BackToFront);
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, new SamplerState() { Filter = TextureFilter.Point });
             DrawNodes();
             spriteBatch.End();
             base.Draw(gameTime);

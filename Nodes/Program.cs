@@ -8,6 +8,7 @@ static class Program
 {
     public static void Main()
     {
+        Console.WriteLine("Loading...");
         Scene scene;
         Scene? newScene;
         scene = new NodeScene();
@@ -17,7 +18,7 @@ static class Program
             scene.Dispose();
             if (newScene != null)
             {
-                scene = newScene;
+                scene = newScene;   
             }
             else
             {
