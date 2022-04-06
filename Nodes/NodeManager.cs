@@ -13,7 +13,7 @@ namespace Nodes
         public volatile bool tick;
         private volatile bool shouldRun;
 
-        private readonly Task task;
+        private Task task;
 
         public readonly Dictionary<ulong, Node> nodes = new();
         public void AddNode(Node node)
@@ -70,19 +70,20 @@ namespace Nodes
         public NodeManager()
         {
             shouldRun = true;
-            task = new Task(Run, TaskCreationOptions.AttachedToParent);
         }
 
         public void Start()
         {
-            task.Start();
+            task = Task.Run(Run);
         }
         public void Run()
         {
             while (shouldRun)
             {
-                Thread.Sleep(TimeSpan.FromTicks(156250 * 64));
-                Console.WriteLine($"NodeManager:{task.Id}\nTick:{tick}\nState:{task.Status}");
+                Console.WriteLine($"NodeManager: {task.Id}\nTick: {tick}\nState: {task.Status}\nNode Count: {nodes.Count}");
+                
+                
+                
                 tick ^= true;
             }
         }

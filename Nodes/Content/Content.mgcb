@@ -14,16 +14,12 @@
 #---------------------------------- Content ---------------------------------#
 
 #begin Arial.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:Arial.spritefont
+/copy:Arial.spritefont
 
 #begin arial.ttf
 /copy:arial.ttf
 
-#begin shit.png
+#begin node.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -33,5 +29,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:shit.png
+/build:node.png
 

@@ -70,7 +70,7 @@ namespace Nodes
         public void DisconnectAll()
         {
 
-            for (int i = 0; i < ; i++)
+            for (int i = 0; i < i; i++)
             {
 
             }
@@ -79,7 +79,8 @@ namespace Nodes
 
         public bool Remove(DataInput<TData, TNode> item)
         {
-            return inputs.Remove(item);
+            //return inputs.Remove(item);
+            return false;
         }
         public int Disconnect(TNode node)
         {
@@ -103,9 +104,9 @@ namespace Nodes
             return amount;
         }
 
-        public DataOutput(string name, TNode node, List<DataInput<TData, TNode>> dataInputs, Type type) : base(name, node, type)
+        public DataOutput(string name, TNode node, List<DataInput<TData, TNode>> dataInputs, Type type) : base(name, node, type) 
         {
-            this.inputs = dataInputs;
+            //this.inputs = dataInputs;
         }
         public DataOutput(string name, TNode node, Type type) : this(name, node, new List<DataInput<TData, TNode>>(), type) { }
     }

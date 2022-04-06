@@ -35,7 +35,7 @@ namespace Nodes
         }
         public List<Node> Backward()
         {
-            List<Node> nodes = new();
+            /*List<Node> nodes = new();
             for (int i = 0; i < inputs.Length; i++)
             {
                 if (inputs[i].Output != null)
@@ -43,10 +43,12 @@ namespace Nodes
                     nodes.Add(inputs[i].Output.node);
                 }
             }
-            return nodes;
+            return nodes;*/
+            throw new NotImplementedException();
         }
-        public Node(string name, DataInput<object?, Node>[] inputs, DataOutput<object?, Node>[] outputs, NodeManager nodeManager)
+        public Node(string name, Vector2 position, DataInput<object?, Node>[] inputs, DataOutput<object?, Node>[] outputs, NodeManager nodeManager)
         {
+            this.position = position;
             this.name = name;
             this.outputs = outputs;
             this.inputs = inputs;
@@ -61,23 +63,26 @@ namespace Nodes
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            float pixelsPerUnit = Camera.Current.PixelsPerUnit;
-            spriteBatch.Draw(
-                texture: NodeScene.Box,
-                position: Camera.Current.UnitToPixel(position,pixelsPerUnit),
-                sourceRectangle: null,
-                color: Color.Red,
-                rotation: 0,
-                origin: NodeScene.Box.Bounds.Size.ToVector2() / 2,
-                scale: new Vector2(1, 1) * pixelsPerUnit,
-                effects: SpriteEffects.None,
-                layerDepth: 0f);
+            Draw(spriteBatch, NodeScene.Box, new Vector2(1/128f),0, Color.White);
             
             //Vector2 gaming = NodeApp.font.MeasureString(name);
             //float multiplication = (1 / gaming.X * 1000);
             //float multiplication = 1;
             //spriteBatch.DrawString(NodeApp.font, name, position, Color.Black, 0, Vector2.Zero, new Vector2(multiplication), SpriteEffects.None, 0); ;
 
+        }
+        public void Draw(SpriteBatch spriteBatch, Texture2D texture, Vector2 textureScale, float rotation, Color color)
+        {
+            spriteBatch.Draw(
+                texture: texture,
+                position: Camera.Current.UnitToPixel(position),
+                sourceRectangle: null,
+                color: color,
+                rotation: rotation,
+                origin: NodeScene.Box.Bounds.Size.ToVector2() / 2,
+                scale: new Vector2(1, 1) * Camera.Current.PixelsPerUnit * textureScale,
+                effects: SpriteEffects.None,
+                layerDepth: 0f);
         }
         public abstract void Run();
     }
