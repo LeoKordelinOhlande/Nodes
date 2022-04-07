@@ -10,7 +10,7 @@ namespace Nodes
     public class NodeManager
     {
         public Random random = new();
-        public volatile bool tick;
+
         private volatile bool shouldRun;
 
         private Task task;
@@ -80,11 +80,10 @@ namespace Nodes
         {
             while (shouldRun)
             {
-                Console.WriteLine($"NodeManager: {task.Id}\nTick: {tick}\nState: {task.Status}\nNode Count: {nodes.Count}");
+                Console.WriteLine($"NodeManager: {task.Id}\nState: {task.Status}\nNode Count: {nodes.Count}");
                 
                 
                 
-                tick ^= true;
             }
         }
 

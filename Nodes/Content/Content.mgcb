@@ -13,11 +13,12 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin Arial.spritefont
-/copy:Arial.spritefont
-
-#begin arial.ttf
-/copy:arial.ttf
+#begin font.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:font.spritefont
 
 #begin node.png
 /importer:TextureImporter
@@ -30,4 +31,7 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:node.png
+
+#begin PxPlus_IBM_VGA_8x16.ttf
+/copy:PxPlus_IBM_VGA_8x16.ttf
 

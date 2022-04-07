@@ -3,22 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Microsoft.Xna.Framework.Graphics;
 namespace Nodes
 {
     public class DataInput<TData, TNode> : DataPoint<TData, TNode> where TNode : Node
     {
         private object? data;
-        private volatile bool tick;
+        private volatile bool updated;
         private Node? outputNode;
         public Node? OutputNode => outputNode;
-        public void SendData(TData data, bool tick)
+        public void SendData(TData data)
         {
             lock (data)
             {
                 this.data = data;
             }
-            this.tick = tick;
+            this.updated = true;
         }
         public bool Connect(Node node, Type type)
         {
@@ -33,6 +33,22 @@ namespace Nodes
                 return gaming;
             }
         }
+        public TData? Read()
+        {
+            if (updated)
+            {
+                updated = false;
+                return (TData?)data;
+            }
+            else
+            {
+                
+                return default;
+            }
+            
+            
+
+        }
         public void Disconnect()
         {
             if (outputNode != null)
@@ -43,10 +59,10 @@ namespace Nodes
                 }
             }
         }
-        public DataInput(string name, TNode node, Type type) : base(name, node, type)
+        public DataInput(string name, TNode node, SpriteFont font) : base(name, node, font)
         {
             data = null;
-            tick = false;
+            updated = false;
         }
 
 

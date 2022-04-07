@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Microsoft.Xna.Framework.Graphics;
 namespace Nodes
 {
     public class DataOutput<TData, TNode> : DataPoint<TData, TNode> where TNode : Node
@@ -40,13 +40,13 @@ namespace Nodes
             return nodes;
         }
 
-        public void Send(TData data, bool tick)
+        public void Send(TData data)
         {
             for (int i = 0; i < inputs.Count; i++)
             {
                 if (inputs[i] != null)
                 {
-                    inputs[i].SendData(data, tick);
+                    inputs[i].SendData(data);
                 }
             }
         }
@@ -104,10 +104,10 @@ namespace Nodes
             return amount;
         }
 
-        public DataOutput(string name, TNode node, List<DataInput<TData, TNode>> dataInputs, Type type) : base(name, node, type) 
+        public DataOutput(string name, TNode node, List<DataInput<TData, TNode>> dataInputs, SpriteFont font) : base(name, node, font) 
         {
             //this.inputs = dataInputs;
         }
-        public DataOutput(string name, TNode node, Type type) : this(name, node, new List<DataInput<TData, TNode>>(), type) { }
+        public DataOutput(string name, TNode node, SpriteFont font) : this(name, node, new List<DataInput<TData, TNode>>(), font) { }
     }
 }

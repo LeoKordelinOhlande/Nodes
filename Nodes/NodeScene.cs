@@ -13,6 +13,7 @@ namespace Nodes
         private Camera camera;
         public static SpriteFont font;
         public static Texture2D Box { get; private set; }
+        //public static Texture2D Node { get; private set; }
         private readonly GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
         private readonly NodeManager nodeManager;
@@ -52,13 +53,13 @@ namespace Nodes
             Window.AllowAltF4 = false;
             camera = new Camera(Vector2.Zero, 3, GraphicsDevice);
             camera.SetCurrent();
-            Box = Content.Load<Texture2D>("node");
-            /*
+            //Node = Content.Load<Texture2D>("node");
+            
             Box = new Texture2D(GraphicsDevice, 1, 1);
             Box.SetData(new byte[] { byte.MaxValue, byte.MaxValue, byte.MaxValue, byte.MaxValue });
-            */
-            //font = Content.Load<SpriteFont>("Arial");
-            nodeManager.AddNode(new CoolNode(nodeManager, Vector2.Zero));
+            
+            font = Content.Load<SpriteFont>("font");
+            nodeManager.AddNode(new CoolNode(nodeManager, Vector2.Zero, font));
             nodeManager.Start();
 
         }
@@ -94,7 +95,7 @@ namespace Nodes
             }
             else if(input.RightMouseClicked || input.MiddleMouseDown)
             {
-                nodeManager.AddNode(new CoolNode(nodeManager, camera.PixelToUnit(input.MousePosition)));
+                nodeManager.AddNode(new CoolNode(nodeManager, camera.PixelToUnit(input.MousePosition), font));
             }
             camera.yScale -= input.ScrollWheelDelta * 0.01f;
             if (camera.yScale < 0.01f)
