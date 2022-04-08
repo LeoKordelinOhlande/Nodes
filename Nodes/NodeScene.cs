@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using MonoGame.Framework;
 using MonoGame.OpenGL;
+
 using Microsoft.Xna.Framework.Input;
 using System;
 using GameEngine.Input;
@@ -26,7 +27,7 @@ namespace Nodes
             IsMouseVisible = true;
             
         }
-
+        
         private void DrawNodes()
         {
             lock (nodeManager.nodes)
@@ -36,6 +37,7 @@ namespace Nodes
                     keyValuePair.Value.Draw(spriteBatch);
                 }
             }
+            
 
         }
         protected override void Initialize()
@@ -59,11 +61,10 @@ namespace Nodes
             Box.SetData(new byte[] { byte.MaxValue, byte.MaxValue, byte.MaxValue, byte.MaxValue });
             
             font = Content.Load<SpriteFont>("font");
-            nodeManager.AddNode(new CoolNode(nodeManager, Vector2.Zero, font));
+            nodeManager.AddNode(new ExampleNode(nodeManager, Vector2.Zero, font));
             nodeManager.Start();
 
         }
-
         protected override void Update(GameTime gameTime)
         {
             input.Update();
@@ -95,9 +96,9 @@ namespace Nodes
             }
             else if(input.RightMouseClicked || input.MiddleMouseDown)
             {
-                nodeManager.AddNode(new CoolNode(nodeManager, camera.PixelToUnit(input.MousePosition), font));
+                nodeManager.AddNode(new ExampleNode(nodeManager, camera.PixelToUnit(input.MousePosition), font));
             }
-            camera.yScale -= input.ScrollWheelDelta * 0.01f;
+            camera.yScale -= (input.ScrollWheelDelta * 0.125f * (gameTime.ElapsedGameTime.Ticks / (float)TimeSpan.TicksPerSecond)) * camera.yScale;
             if (camera.yScale < 0.01f)
             {
                 camera.yScale = 0.01f;

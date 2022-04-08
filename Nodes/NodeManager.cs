@@ -23,6 +23,7 @@ namespace Nodes
                 lock (nodes)
                 {
                     nodes.Add(node.id, node);
+                    node.Initialize();
                     //throw new NotImplementedException();
                 }
             }

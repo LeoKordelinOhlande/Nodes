@@ -22,6 +22,7 @@ namespace Nodes
             this.position = position;
             this.yScale = yScale;
             this.graphics = graphics;
+            
         }
         
         

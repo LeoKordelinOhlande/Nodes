@@ -104,10 +104,10 @@ namespace Nodes
             return amount;
         }
 
-        public DataOutput(string name, TNode node, List<DataInput<TData, TNode>> dataInputs, SpriteFont font) : base(name, node, font) 
+        public DataOutput(string name, TNode node, List<DataInput<TData, Node>> dataInputs, Type type, SpriteFont font) : base(name, node, type, font) 
         {
-            //this.inputs = dataInputs;
+            this.inputs = dataInputs;
         }
-        public DataOutput(string name, TNode node, SpriteFont font) : this(name, node, new List<DataInput<TData, TNode>>(), font) { }
+        public DataOutput(string name, TNode node, Type type, SpriteFont font) : this(name, node, new List<DataInput<TData, Node>>(), type, font) { }
     }
 }
