@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PcapDotNet.TestUtils;
 using Microsoft.Xna.Framework.Graphics;
 namespace Nodes
 {
@@ -51,8 +52,12 @@ namespace Nodes
                 }
             }
         }
-        public DataInput(string name, TNode node, Type type, SpriteFont font) : base(name, node, type, font)
+        public DataInput(NodeManager nodeManager, string name, TNode node, Type type, SpriteFont font) : base(name, node, type, font)
         {
+            do
+            {
+                this.id = nodeManager.random.NextULong();
+            } while (nodeManager.IdExists(id));
             data = null;
             Updated = false;
         }

@@ -20,7 +20,7 @@ namespace Nodes
         public TypeNode(NodeManager nodeManager, Vector2 position, SpriteFont font, Parser parser) : base($"{typeof(T).Name} Node", position, Array.Empty<DataInput<object?, Node>>(), new DataOutput<object?, Node>[1], nodeManager, font)
         {
             this.parser = parser;
-            outputs[0] = new DataOutput<object?, Node>("Output", this, typeof(T), font);
+            outputs[0] = new DataOutput<object?, Node>(nodeManager, "Output", this, typeof(T), font);
         }
         public override void CalculateSize()
         {

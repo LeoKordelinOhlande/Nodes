@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PcapDotNet.TestUtils;
 using Microsoft.Xna.Framework.Graphics;
 namespace Nodes
 {
@@ -104,10 +105,14 @@ namespace Nodes
             return amount;
         }
 
-        public DataOutput(string name, TNode node, List<DataInput<TData, Node>> dataInputs, Type type, SpriteFont font) : base(name, node, type, font) 
+        public DataOutput(NodeManager nodeManager, string name, TNode node, List<DataInput<TData, Node>> dataInputs, Type type, SpriteFont font) : base(name, node, type, font) 
         {
+            do
+            {
+                this.id = nodeManager.random.NextULong();
+            } while (nodeManager.IdExists(id));
             this.inputs = dataInputs;
         }
-        public DataOutput(string name, TNode node, Type type, SpriteFont font) : this(name, node, new List<DataInput<TData, Node>>(), type, font) { }
+        public DataOutput(NodeManager nodeManager, string name, TNode node, Type type, SpriteFont font) : this(nodeManager,name, node, new List<DataInput<TData, Node>>(), type, font) { }
     }
 }

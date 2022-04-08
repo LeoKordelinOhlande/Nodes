@@ -16,6 +16,8 @@ namespace Nodes
         private Task task;
 
         public readonly Dictionary<ulong, Node> nodes = new();
+        public readonly Dictionary<ulong, DataInput<object?, Node>> dataInputs = new();
+        public readonly Dictionary<ulong, DataOutput<object?, Node>> dataOutputs = new();
         public void AddNode(Node node)
         {
             lock (node)
@@ -23,6 +25,14 @@ namespace Nodes
                 lock (nodes)
                 {
                     nodes.Add(node.id, node);
+                    for (int i = 0; i < node.inputs.Length; i++)
+                    {
+                        dataInputs.Add(node.inputs[i].id, node.inputs[i]);
+                    }
+                    for (int i = 0; i < node.outputs.Length; i++)
+                    {
+                        dataOutputs.Add(node.outputs[i].id, node.outputs[i]);
+                    }
                     node.Initialize();
                     //throw new NotImplementedException();
                 }
@@ -82,8 +92,8 @@ namespace Nodes
             while (shouldRun)
             {
                 Console.WriteLine($"NodeManager: {task.Id}\nState: {task.Status}\nNode Count: {nodes.Count}");
-                
-                
+
+                Thread.Sleep(TimeSpan.FromTicks(TimeSpan.TicksPerSecond));
                 
             }
         }

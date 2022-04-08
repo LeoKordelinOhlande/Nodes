@@ -11,13 +11,17 @@ namespace Nodes
 {
     public abstract class Node
     {
+        const float activeOutLineSize = 0.0625f;
+        public bool isActive = false;
+        public int? activeInput;
+        public int? activeOutput;
         const float idSize = 0.125f;
         const float shit = 1 / 16f;
         const float padding = 0.5f;
         public Vector2 size;
         protected readonly SpriteFont font;
         protected NodeManager nodeManager;
-        protected Vector2 position;
+        public Vector2 position;
         public readonly string name;
         public readonly float nameWidth;
         public readonly ulong id;
@@ -94,6 +98,38 @@ namespace Nodes
         {
             throw new NotImplementedException("woops, you have to put the cd in your computer");
         }
+        public virtual bool IsWithin(Vector2 point)
+        {
+            Vector2 gamer = (point - position);
+            float g = size.X * 0.5f;
+            float a = size.Y * 0.5f;
+            bool restut = gamer.X <= g && gamer.X >= -g && gamer.Y <= a && gamer.Y >= -a;
+            return restut;
+        }
+        public virtual int? IsTouchingInput(Vector2 point)
+        {
+            if (isActive)
+            {
+                throw new NotImplementedException();
+            }
+            else
+            {
+                throw new InvalidOperationException();
+            }
+            
+        }
+        public virtual ulong? IsTouchingOutput(Vector2 point)
+        {
+            if (isActive)
+            {
+                throw new NotImplementedException();
+            }
+            else
+            {
+                throw new InvalidOperationException();
+            }
+
+        }
         public virtual void CalculateSize()
         {
             size.X = nameWidth;
@@ -132,6 +168,53 @@ namespace Nodes
                 effects: SpriteEffects.None,
                 layerDepth: 0f);
 
+            if (isActive)
+            {
+                spriteBatch.Draw(
+                texture: NodeScene.Box,
+                position: Camera.Current.UnitToPixel(position + new Vector2(0, (size.Y + activeOutLineSize) * 0.5f)),
+                sourceRectangle: null,
+                color: Color.LightBlue,
+                rotation: 0,
+                origin: NodeScene.Box.Bounds.Size.ToVector2() / 2,
+                scale: new Vector2(size.X,activeOutLineSize)* Camera.Current.PixelsPerUnit,
+                effects: SpriteEffects.None,
+                layerDepth: 0f);
+
+                spriteBatch.Draw(
+                texture: NodeScene.Box,
+                position: Camera.Current.UnitToPixel(position - new Vector2(0f, (size.Y + activeOutLineSize) * 0.5f)),
+                sourceRectangle: null,
+                color: Color.LightBlue,
+                rotation: 0,
+                origin: NodeScene.Box.Bounds.Size.ToVector2() / 2,
+                scale: new Vector2(size.X, activeOutLineSize) * Camera.Current.PixelsPerUnit,
+                effects: SpriteEffects.None,
+                layerDepth: 0f);
+
+                spriteBatch.Draw(
+                texture: NodeScene.Box,
+                position: Camera.Current.UnitToPixel(position + new Vector2((size.X + activeOutLineSize) * 0.5f, 0f)),
+                sourceRectangle: null,
+                color: Color.LightBlue,
+                rotation: 0,
+                origin: NodeScene.Box.Bounds.Size.ToVector2() / 2,
+                scale: new Vector2(activeOutLineSize, size.Y) * Camera.Current.PixelsPerUnit,
+                effects: SpriteEffects.None,
+                layerDepth: 0f);
+
+                spriteBatch.Draw(
+                texture: NodeScene.Box,
+                position: Camera.Current.UnitToPixel(position - new Vector2((size.X + activeOutLineSize) * 0.5f, 0f)),
+                sourceRectangle: null,
+                color: Color.LightBlue,
+                rotation: 0,
+                origin: NodeScene.Box.Bounds.Size.ToVector2() / 2,
+                scale: new Vector2(activeOutLineSize, size.Y) * Camera.Current.PixelsPerUnit,
+                effects: SpriteEffects.None,
+                layerDepth: 0f);
+            }
+
             spriteBatch.Draw(
                 texture: NodeScene.Box,
                 position: Camera.Current.UnitToPixel(position + new Vector2(0, (size.Y) / 2f - 0.5f)),
@@ -168,14 +251,15 @@ namespace Nodes
 
             for (int i = 0; i < inputs.Length; i++)
             {
+
                 spriteBatch.Draw(
                     texture: NodeScene.Box,
-                    position: Camera.Current.UnitToPixel(position + (size * new Vector2(-0.5f,0.5f)) + new Vector2(0,-1.5f - i)),
+                    position: Camera.Current.UnitToPixel(position + (size * new Vector2(-0.5f,0.5f)) + new Vector2(0.125f,-1.5f - i)),
                     sourceRectangle: null,
-                    color: Color.CornflowerBlue,
+                    color: (activeInput.HasValue && activeInput.Value == i) ? Color.LightBlue : Color.DarkBlue,
                     rotation: 0,
                     origin: NodeScene.Box.Bounds.Size.ToVector2() / 2,
-                    scale: new Vector2(0.5f) * Camera.Current.PixelsPerUnit,
+                    scale: new Vector2(0.25f, 0.5f) * Camera.Current.PixelsPerUnit,
                     effects: SpriteEffects.None,
                     layerDepth: 0.1f);
 
@@ -205,12 +289,12 @@ namespace Nodes
             {
                 spriteBatch.Draw(
                     texture: NodeScene.Box,
-                    position: Camera.Current.UnitToPixel(position + size * new Vector2(0.5f, 0.5f) + new Vector2(0f, -1.5f - i)),
+                    position: Camera.Current.UnitToPixel(position + size * new Vector2(0.5f, 0.5f) + new Vector2(-0.125f, -1.5f - i)),
                     sourceRectangle: null,
-                    color: Color.CornflowerBlue,
+                    color: (activeOutput.HasValue && activeOutput.Value == i) ? Color.LightBlue : Color.DarkBlue,
                     rotation: 0,
                     origin: NodeScene.Box.Bounds.Size.ToVector2() / 2,
-                    scale: new Vector2(0.5f) * Camera.Current.PixelsPerUnit,
+                    scale: new Vector2(0.25f,0.5f) * Camera.Current.PixelsPerUnit,
                     effects: SpriteEffects.None,
                     layerDepth: 0.1f);
 
@@ -224,6 +308,7 @@ namespace Nodes
                     scale: shit * Camera.Current.PixelsPerUnit * 0.75f,
                     effects: SpriteEffects.None,
                     layerDepth: 0.1f);
+
                 spriteBatch.DrawString(
                     spriteFont: font,
                     text: outputs[i].type.Name,

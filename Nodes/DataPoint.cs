@@ -15,9 +15,11 @@ namespace Nodes
         public readonly float typeWidth;
         public readonly TNode node;
         public readonly Type type;
+        public ulong id;
         public DataPoint(string name, TNode node, SpriteFont font) : this(name, node, typeof(TData), font) { }
         public DataPoint(string name, TNode node, Type type, SpriteFont font)
         {
+            
             {
                 Vector2 bounds = font.MeasureString(name);
                 this.nameWidth = bounds.X / bounds.Y * 0.75f;

@@ -11,6 +11,10 @@ namespace Nodes
 {
     public sealed class NodeScene : Scene
     {
+        private ulong? activeNode;
+        private bool currentlyTouhcing = false;
+        private ulong? activeInput;
+        private ulong? activeOutput;
         private Camera camera;
         public static SpriteFont font;
         public static Texture2D Box { get; private set; }
@@ -25,9 +29,9 @@ namespace Nodes
             graphics = new(this);
             IsFixedTimeStep = false;
             IsMouseVisible = true;
-            
+
         }
-        
+
         private void DrawNodes()
         {
             lock (nodeManager.nodes)
@@ -37,7 +41,7 @@ namespace Nodes
                     keyValuePair.Value.Draw(spriteBatch);
                 }
             }
-            
+
 
         }
         protected override void Initialize()
@@ -56,10 +60,10 @@ namespace Nodes
             camera = new Camera(Vector2.Zero, 3, GraphicsDevice);
             camera.SetCurrent();
             //Node = Content.Load<Texture2D>("node");
-            
+
             Box = new Texture2D(GraphicsDevice, 1, 1);
             Box.SetData(new byte[] { byte.MaxValue, byte.MaxValue, byte.MaxValue, byte.MaxValue });
-            
+
             font = Content.Load<SpriteFont>("font");
             nodeManager.AddNode(new ExampleNode(nodeManager, Vector2.Zero, font));
             nodeManager.Start();
@@ -68,11 +72,15 @@ namespace Nodes
         protected override void Update(GameTime gameTime)
         {
             input.Update();
+
+
             
             if (input.IsKeyPressed(Keys.Escape))
             {
                 Exit();
             }
+
+            #region Movement key check
             if (input.IsKeyDown(Keys.W) || input.IsKeyDown(Keys.Up) || input.IsKeyDown(Keys.I))
             {
                 camera.position.Y += camera.yScale * (gameTime.ElapsedGameTime.Ticks / (float)TimeSpan.TicksPerSecond);
@@ -89,12 +97,60 @@ namespace Nodes
             {
                 camera.position.X -= camera.yScale * (gameTime.ElapsedGameTime.Ticks / (float)TimeSpan.TicksPerSecond);
             }
-            
+            #endregion
+
+
             if (input.LeftMouseDown)
             {
-                camera.position -= camera.PixelToUnitWithoutTranslation(input.MousePositionDelta);
+                
+                currentlyTouhcing = activeNode.HasValue && nodeManager.nodes[activeNode.Value].IsWithin(camera.PixelToUnit(input.LateMousePosition));
+
+                foreach (KeyValuePair<ulong, Node> shit in nodeManager.nodes)
+                {
+                    if (shit.Value.id != activeNode)
+                    {
+                        if (shit.Value.IsWithin(camera.PixelToUnit(input.LateMousePosition)))
+                        {
+                            if (activeNode.HasValue)
+                            {
+                                nodeManager.nodes[activeNode.Value].isActive = false;
+                            }
+
+                            activeNode = shit.Value.id;
+                            shit.Value.isActive = true;
+                            currentlyTouhcing = true;
+                            break;
+                        }
+                    }
+
+                }
+                if (currentlyTouhcing)
+                {
+                    //int? fortntie =  nodeManager.nodes[activeNode.Value].IsTouchingInput(camera.PixelToUnit(input.LateMousePosition));
+                    nodeManager.nodes[activeNode.Value].position += camera.PixelToUnitWithoutTranslation(input.MousePositionDelta);
+                }
+                else
+                {
+                    if (activeNode.HasValue)
+                    {
+                        nodeManager.nodes[activeNode.Value].isActive = false;
+                        nodeManager.nodes[activeNode.Value].activeInput = null;
+                        nodeManager.nodes[activeNode.Value].activeOutput = null;
+
+                        activeNode = null;
+                    }
+                    
+                    
+                    camera.position -= camera.PixelToUnitWithoutTranslation(input.MousePositionDelta);
+                }
+
             }
-            else if(input.RightMouseClicked || input.MiddleMouseDown)
+            else
+            {
+                currentlyTouhcing = false;
+            }
+
+            if (input.RightMouseClicked || input.MiddleMouseDown)
             {
                 nodeManager.AddNode(new ExampleNode(nodeManager, camera.PixelToUnit(input.MousePosition), font));
             }
@@ -104,10 +160,12 @@ namespace Nodes
                 camera.yScale = 0.01f;
             }
 
-            
+
             input.LateUpdate();
+            
             base.Update(gameTime);
         }
+        
 
 
         protected override void EndRun()
